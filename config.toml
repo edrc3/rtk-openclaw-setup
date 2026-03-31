@@ -1,0 +1,38 @@
+# ============================================================
+# RTK Config — Hardened para OpenClaw (RC3 Empreendimentos)
+# ============================================================
+# Coloque este arquivo em:
+#   Linux:  ~/.config/rtk/config.toml
+#   macOS:  ~/Library/Application Support/rtk/config.toml
+# ============================================================
+
+# --- Telemetria: DESLIGADA ---
+# Impede envio de dados de uso para servidores externos.
+# Motivo: o build oficial do Homebrew compila com endpoint
+# de telemetria embutido. Mesmo compilando do source,
+# mantemos desligado por precaução.
+[telemetry]
+enabled = false
+
+# --- Tracking: retenção curta, sem histórico sensível ---
+# O tracking registra comandos executados no SQLite local.
+# Risco: senhas e tokens em argumentos ficam gravados.
+# Mitigação: retenção de 1 dia (mínimo útil para rtk gain).
+[tracking]
+retention_days = 1
+# database_path = "~/.local/share/rtk/history.db"  # padrão
+
+# --- Tee: salvar output completo só em falhas ---
+# Útil para debug, mas limitar arquivos e desabilitar
+# diretório customizado (evita path traversal).
+[tee]
+enabled = true
+mode = "failures"
+max_files = 10
+
+# --- Hooks: bloquear comandos perigosos no rewrite ---
+# Estes comandos NÃO serão reescritos pelo hook.
+# Redundante no nosso setup (usamos skill manual),
+# mas é uma camada extra de proteção.
+[hooks]
+exclude_commands = ["curl", "wget", "ssh", "scp", "rsync", "proxy"]
